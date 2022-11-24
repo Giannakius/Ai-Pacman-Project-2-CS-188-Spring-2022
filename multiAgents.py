@@ -68,15 +68,32 @@ class ReflexAgent(Agent):
         to create a masterful evaluation function.
         """
         # Useful information you can extract from a GameState (pacman.py)
-        successorGameState = currentGameState.generatePacmanSuccessor(action)
-        newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
+        successorGameState = currentGameState.generatePacmanSuccessor(action) #anaparastash map with score
+        newPos = successorGameState.getPacmanPosition() # tuple
+        newFood = successorGameState.getFood() # True-False for food list
         newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates] # time that ghost is scared
 
         "*** YOUR CODE HERE ***"
+        
+        food = currentGameState.getFood()       # Get all foods (True-False)
+        foodList = food.asList()                # and put them on a list
+        currentPos = list(successorGameState.getPacmanPosition()) #Current_Position
+        distance = float('-inf')
 
+        if (action == 'Stop'):      # action = north-south-east-west OR stop
+            return float('-inf')    # exceeds the minimum value
 
+        for current_state in newGhostStates:
+            if current_state.getPosition() == tuple(currentPos) and (current_state.scaredTimer == 0):
+                return float('-inf')    # exceeds the minimum value
+
+        for x in foodList:
+            tempDistance = -1 * (manhattanDistance(currentPos, x))
+            if (tempDistance > distance):
+                distance = tempDistance
+
+        return distance
 
         
 
