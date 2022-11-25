@@ -101,11 +101,6 @@ class ReflexAgent(Agent):
         # ayto prepei na epistrefei oso to dynaton megalh times oso pio konta sto Food brisketai.
         return distance
 
-        
-
-
-
-        return successorGameState.getScore()
 
 def scoreEvaluationFunction(currentGameState: GameState):
     """
