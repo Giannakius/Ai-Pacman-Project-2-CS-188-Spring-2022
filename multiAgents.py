@@ -137,24 +137,26 @@ class MinimaxAgent(MultiAgentSearchAgent):
     Your minimax agent (question 2)
     """
 
-    def MaxValue(self , GameState ):
-        if (GameState.isWin() or GameState.isLose() ):  # if Terminal State
+    def MaxValue(self , gameState: GameState , depth , temp_agents):
+        print ("deaaaapthhhhhhhhh ===== ",depth)
+        if (gameState.isWin() or gameState.isLose() or depth==0):  # if Terminal State
              return self.evaluationFunction(GameState)
 
         n = float('-inf')                            # agentsIndex = 0 cause we want the Pacman's Actions
-        actions = GameState.getLegalActions(0)       # Change to >=1 for Ghosts.          
+        actions = gameState.getLegalActions(temp_agents)       # Change to >=1 for Ghosts.          
         for x in actions:   # For all possible Pacman's movent options 
-            n = max(n , self.MinValue(GameState.generateSuccessor(0, x))) # Returns the maximum value of all the X_node childers.
+            n = max(n , self.MinValue(gameState.generateSuccessor(0, x) , depth-1 , temp_agents+1)) # Returns the maximum value of all the X_node childers.
+        print("NNNNNNNNNNNNNNN ===== " , n )                                                        # temp_agents is for ghosts min layer of ghost's id number .
         return n
 
-    def MinValue(self , GameState ):
-        if (GameState.isWin() or GameState.isLose() ):  # if Terminal State
-             return self.evaluationFunction(GameState)
+    def MinValue(self , gameState: GameState , depth , temp_agents):
+        if (gameState.isWin() or gameState.isLose() or depth==1):  # if Terminal State
+             return self.evaluationFunction(gameState)
 
         n = float('inf')                            # agentsIndex = 0 cause we want the Pacman's Actions
-        actions = self.gameState.getLegalActions(0)       # Change to >=1 for Ghosts.          
+        actions = gameState.getLegalActions(temp_agents)       # Change to >=1 for Ghosts.          
         for x in actions:   # For all possible Pacman's movent options 
-            n = min(n , self.MaxValue(GameState.generateSuccessor(0, x))) # Returns the maximum value of all the X_node childers.
+            n = min(n , self.MaxValue(gameState.generateSuccessor(0, x) , depth-1,temp_agents)) # Returns the maximum value of all the X_node childers.
         return n
 
 
@@ -183,9 +185,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"    
-
-        return self.MaxValue(GameState)
-
+        depth = self.depth * 2  # depth * 2 cause one move for pacman , one for ghost.
+        temp_agent = 0 # 0 = pacman , 1,2,3,4... Ghosts
+        return self.MaxValue(gameState, depth , temp_agent)
 
 
 
