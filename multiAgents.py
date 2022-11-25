@@ -84,12 +84,16 @@ class ReflexAgent(Agent):
         if (action == 'Stop'):      # action = north-south-east-west OR stop
             return float('-inf')    # exceeds the minimum value
 
-        for current_state in newGhostStates:
+        for current_state in newGhostStates:    # if in current_state exists a ghost and it's not scared.
             if current_state.getPosition() == tuple(currentPos) and (current_state.scaredTimer == 0):
                 return float('-inf')    # exceeds the minimum value
 
         for x in foodList:
+            # We find the best distance to our closest dots. 
+            # Oso megalyterh einai h timh poy epistrefei h manhattan toso mikroterh einai h arnhtikh ths timh
+            # Oso mikroterh manhattan toso megalyterh timh distance . px (100 -> -100 || 6 -> -6 |||| -100 < -6)
             tempDistance = -1 * (manhattanDistance(currentPos, x))
+
             if (tempDistance > distance):
                 distance = tempDistance
 
