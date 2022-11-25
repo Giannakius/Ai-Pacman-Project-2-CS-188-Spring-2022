@@ -97,6 +97,8 @@ class ReflexAgent(Agent):
             if (tempDistance > distance):
                 distance = tempDistance
 
+        # Ousiastika h synarthsh ayth exei ws stoxo na faei to kontinotero Food , kai gia na to petyxei
+        # ayto prepei na epistrefei oso to dynaton megalh times oso pio konta sto Food brisketai.
         return distance
 
         
