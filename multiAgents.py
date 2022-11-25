@@ -137,6 +137,28 @@ class MinimaxAgent(MultiAgentSearchAgent):
     Your minimax agent (question 2)
     """
 
+    def MaxValue(self , GameState ):
+        if (GameState.isWin() or GameState.isLose() ):  # if Terminal State
+             return self.evaluationFunction(GameState)
+
+        n = float('-inf')                            # agentsIndex = 0 cause we want the Pacman's Actions
+        actions = GameState.getLegalActions(0)       # Change to >=1 for Ghosts.          
+        for x in actions:   # For all possible Pacman's movent options 
+            n = max(n , self.MinValue(GameState.generateSuccessor(0, x))) # Returns the maximum value of all the X_node childers.
+        return n
+
+    def MinValue(self , GameState ):
+        if (GameState.isWin() or GameState.isLose() ):  # if Terminal State
+             return self.evaluationFunction(GameState)
+
+        n = float('inf')                            # agentsIndex = 0 cause we want the Pacman's Actions
+        actions = self.gameState.getLegalActions(0)       # Change to >=1 for Ghosts.          
+        for x in actions:   # For all possible Pacman's movent options 
+            n = min(n , self.MaxValue(GameState.generateSuccessor(0, x))) # Returns the maximum value of all the X_node childers.
+        return n
+
+
+
     def getAction(self, gameState: GameState):
         """
         Returns the minimax action from the current gameState using self.depth
@@ -160,8 +182,14 @@ class MinimaxAgent(MultiAgentSearchAgent):
         gameState.isLose():
         Returns whether or not the game state is a losing state
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        "*** YOUR CODE HERE ***"    
+
+        return self.MaxValue(GameState)
+
+
+
+
+        
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
