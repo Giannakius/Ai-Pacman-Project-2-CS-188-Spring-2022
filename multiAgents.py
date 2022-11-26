@@ -138,15 +138,17 @@ class MinimaxAgent(MultiAgentSearchAgent):
     """
 
     def MaxValue(self , gameState: GameState , depth , temp_agents):
-        print ("deaaaapthhhhhhhhh ===== ",depth)
+        moves = []
         if (gameState.isWin() or gameState.isLose() or depth==0):  # if Terminal State
              return self.evaluationFunction(GameState)
-
+        
         n = float('-inf')                            # agentsIndex = 0 cause we want the Pacman's Actions
         actions = gameState.getLegalActions(temp_agents)       # Change to >=1 for Ghosts.          
         for x in actions:   # For all possible Pacman's movent options 
-            n = max(n , self.MinValue(gameState.generateSuccessor(0, x) , depth-1 , temp_agents+1)) # Returns the maximum value of all the X_node childers.
-        print("NNNNNNNNNNNNNNN ===== " , n )                                                        # temp_agents is for ghosts min layer of ghost's id number .
+            
+            n = max(n , self.MinValue(gameState.generateSuccessor(0, x) , depth-1 , 1)) # Returns the maximum value of all the X_node childers.
+            print ("TESTTTTTTTTTT")
+            moves.extend(x)                                                   # temp_agents is for ghosts min layer of ghost's id number .
         return n
 
     def MinValue(self , gameState: GameState , depth , temp_agents):
@@ -156,7 +158,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
         n = float('inf')                            # agentsIndex = 0 cause we want the Pacman's Actions
         actions = gameState.getLegalActions(temp_agents)       # Change to >=1 for Ghosts.          
         for x in actions:   # For all possible Pacman's movent options 
-            n = min(n , self.MaxValue(gameState.generateSuccessor(0, x) , depth-1,temp_agents)) # Returns the maximum value of all the X_node childers.
+            n = min(n , self.MaxValue(gameState.generateSuccessor(0, x) , depth-1,1)) # Returns the maximum value of all the X_node childers.
+            print ("AEKKKKKKK")
         return n
 
 
@@ -185,9 +188,22 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"    
-        depth = self.depth * 2  # depth * 2 cause one move for pacman , one for ghost.
-        temp_agent = 0 # 0 = pacman , 1,2,3,4... Ghosts
-        return self.MaxValue(gameState, depth , temp_agent)
+        depth = self.depth * gameState.getNumAgents() # cause for one move for pacman , we have NumAgents-1 moves for Ghosts
+        agent_turn = 0 # 0 = Pacman turn // 1 ... NumAgents-1 = Ghost turn
+        while (depth>=0) :    
+            if (gameState.isWin() or gameState.isLose() or depth==0):  # if terminal node 
+                return Directions.STOP
+            elif (agent_turn == 0 ):  # Max - Pacman's turn
+                agent_turn += 1
+
+            elif (agent_turn > 0 ):  # Min - Ghost's turn
+                if ( agent_turn==gameState.getNumAgents()-1 ):     # one more move for the ghosts
+                    agent_turn = 0 
+                else:                                               # time for pacman to play!
+                    agent_turn += 1
+
+
+
 
 
 
