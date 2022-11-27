@@ -162,6 +162,22 @@ class MinimaxAgent(MultiAgentSearchAgent):
             print ("AEKKKKKKK")
         return n
 
+    def miniMax(self, State, depth, aIndex=0):
+
+        if State.isWin() or State.isLose() or depth == 0:
+            return (self.evaluationFunction(State),) #return current score
+        Agent = State.getNumAgents()
+        if aIndex != Agent - 1:
+            nDepth = depth
+        else:
+            nDepth = depth - 1
+        newAIndex = (aIndex + 1) % Agent
+        actionLegal=State.getLegalActions(aIndex)
+        temp5 = []
+        for a in actionLegal:
+            temp5.append((self.miniMax(State.generateSuccessor(aIndex, a), nDepth, newAIndex)[0], a))
+        z=max(temp5) if aIndex == 0 else min(temp5)
+        return z
 
 
     def getAction(self, gameState: GameState):
@@ -188,22 +204,27 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"    
-        depth = self.depth * gameState.getNumAgents() # cause for one move for pacman , we have NumAgents-1 moves for Ghosts
-        agent_turn = 0 # 0 = Pacman turn // 1 ... NumAgents-1 = Ghost turn
-        while (depth>=0) :    
-            if (gameState.isWin() or gameState.isLose() or depth==0):  # if terminal node 
-                return Directions.STOP
-            elif (agent_turn == 0 ):  # Max - Pacman's turn
-                agent_turn += 1
-
-            elif (agent_turn > 0 ):  # Min - Ghost's turn
-                if ( agent_turn==gameState.getNumAgents()-1 ):     # one more move for the ghosts
-                    agent_turn = 0 
-                else:                                               # time for pacman to play!
-                    agent_turn += 1
+        # depth = self.depth * gameState.getNumAgents() # cause for one move for pacman , we have NumAgents-1 moves for Ghosts
+        # agent_turn = 0 # 0 = Pacman turn // 1 ... NumAgents-1 = Ghost turn
+        # while (depth>=0) :    
+        #     if (gameState.isWin() or gameState.isLose() or depth==0):  # if terminal node 
+        #         return Directions.STOP
+        #     elif (agent_turn == 0 ):  # Max - Pacman's turn
+        #         agent_turn += 1
+                
+                
 
 
 
+
+        #     elif (agent_turn > 0 ):  # Min - Ghost's turn
+        #         if ( agent_turn==gameState.getNumAgents()-1 ):     # one more move for the ghosts
+        #             agent_turn = 0 
+        #         else:                                               # time for pacman to play!
+        #             agent_turn += 1
+
+
+        return self.miniMax(gameState, self.depth)[1]
 
 
 
