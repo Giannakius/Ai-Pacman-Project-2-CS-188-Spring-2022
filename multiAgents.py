@@ -83,7 +83,7 @@ class ReflexAgent(Agent):
 
         if (action == 'Stop'):      # action = north-south-east-west OR stop
             return float('-inf')    # exceeds the minimum value
-
+        
         for current_state in newGhostStates:    # if in current_state exists a ghost and it's not scared.
             if current_state.getPosition() == tuple(currentPos) and (current_state.scaredTimer == 0):
                 return float('-inf')    # exceeds the minimum value
@@ -162,22 +162,30 @@ class MinimaxAgent(MultiAgentSearchAgent):
     #         print ("AEKKKKKKK")
     #     return n
 
-    def miniMax(self, State, depth, aIndex=0):
+    def miniMax(self, GameState, depth, temp_Agent=0):
 
-        if State.isWin() or State.isLose() or depth == 0:
-            return (self.evaluationFunction(State),) #return current score
-        Agent = State.getNumAgents()
-        print ("aIndex = " , aIndex , "Agent = " , Agent)
-        if aIndex != Agent - 1:
-            nDepth = depth
-        else:
-            nDepth = depth - 1
-        newAIndex = (aIndex + 1) % Agent
-        actionLegal=State.getLegalActions(aIndex)
+        if GameState.isWin() or GameState.isLose() or depth == 0:   # If terminal_node (Win-Lose-End_of_the_tree)
+            return (self.evaluationFunction(GameState),"Stop")      # Return ......   
+        
+        All_Agents = GameState.getNumAgents()           # Getting the number of all the Agents(Pacman+Ghosts)
+        
+        # Agents goes 0 for Pacman and 1,2,3,... n for the Ghosts
+
+        if temp_Agent != All_Agents - 1:        # If temp_Agent is the NOT the last Agent.
+            temp_Depth = depth                  # initialize temp_Depth to tree depth.  
+        else:                                   # Else if its the Last Ghost turn 
+            temp_Depth = depth - 1              # Go to the next depth.
+        
+
+        next_temp_Agent = (temp_Agent + 1) % All_Agents # next_temp_Agent goes to the next Agent and if temp_Agent was
+                                                        #  the last Agent goes again to the Start. PX(agents=3)-> 0,1,2,0,1,2....
+        
+        actionLegal = GameState.getLegalActions(temp_Agent)     # A list of legal actions for temp_Agent.
+        
         temp5 = []
         for a in actionLegal:
-            temp5.append((self.miniMax(State.generateSuccessor(aIndex, a), nDepth, newAIndex)[0], a))
-        z=max(temp5) if aIndex == 0 else min(temp5)
+            temp5.append((self.miniMax(GameState.generateSuccessor(temp_Agent, a), temp_Depth, next_temp_Agent)[0], a))
+        z=max(temp5) if temp_Agent == 0 else min(temp5)
         return z
 
 
