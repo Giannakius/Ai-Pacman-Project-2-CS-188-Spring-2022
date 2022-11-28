@@ -182,11 +182,16 @@ class MinimaxAgent(MultiAgentSearchAgent):
         
         actionLegal = GameState.getLegalActions(temp_Agent)     # A list of legal actions for temp_Agent.
         
-        temp5 = []
-        for a in actionLegal:
-            temp5.append((self.miniMax(GameState.generateSuccessor(temp_Agent, a), temp_Depth, next_temp_Agent)[0], a))
-        z=max(temp5) if temp_Agent == 0 else min(temp5)
-        return z
+        all_possible_scores = []
+        for action in actionLegal:  # For all the possible moves , find the score of the pacman's route and his last move       # [0] is beacuse its a tuple('score','move') and we want only the score.
+            all_possible_scores.append((self.miniMax(GameState.generateSuccessor(temp_Agent, action), temp_Depth, next_temp_Agent)[0], action))
+        
+        if temp_Agent == 0 :    # if Agent is Pacman , Find the MAX move , ie the MAX possible SCORE.
+            move = max(all_possible_scores)
+        else:                   # else if Agent is Ghost , Find the MIN move , ie the MIN possible SCORE.
+            move = min(all_possible_scores)
+        
+        return move
 
 
     def getAction(self, gameState: GameState):
@@ -221,10 +226,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
         #     elif (agent_turn == 0 ):  # Max - Pacman's turn
         #         agent_turn += 1
                 
-                
-
-
-
 
         #     elif (agent_turn > 0 ):  # Min - Ghost's turn
         #         if ( agent_turn==gameState.getNumAgents()-1 ):     # one more move for the ghosts
@@ -232,8 +233,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
         #         else:                                               # time for pacman to play!
         #             agent_turn += 1
 
-
-        return self.miniMax(gameState, self.depth)[1]
+        result = self.miniMax(gameState, self.depth)
+        return result[1]
 
 
 
