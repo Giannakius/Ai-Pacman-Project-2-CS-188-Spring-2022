@@ -274,13 +274,12 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 if beta < alpha:
                     break
 
-
-        # If it is a leaf state with no successor states, return the value of evaluationFunction
+        # If it's a leaf with no successors
         if best_score is None:
             return None, self.evaluationFunction(gameState)
-        return best_action, best_score  # Return the best_action and best_score
-
-
+        else:
+        # Return the best_action and best_score
+            return best_action, best_score  
 
 
 
