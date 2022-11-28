@@ -233,8 +233,8 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             agent_index = 0
             curr_depth = curr_depth + 1
         
-        # If max depth is reached
-        if curr_depth == self.depth:
+        # If Terminal node
+        if gameState.isWin() or gameState.isLose() or curr_depth == self.depth :
             # Return the Action and Score
             return None, self.evaluationFunction(gameState)
         
