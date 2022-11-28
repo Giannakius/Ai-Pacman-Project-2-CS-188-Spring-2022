@@ -212,10 +212,15 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
+        
+        depthstart = 0 
+        agentstart = 0 #Pacman
+
         # Get the action and score for pacman (max)
-        action, score = self.alpha_beta(0, 0, gameState, float('-inf'), float('inf'))
+        action, score = self.alpha_beta(depthstart, agentstart, gameState, float('-inf'), float('inf'))
         
         return action  
+
 
     def alpha_beta(self, curr_depth, agent_index, gameState, alpha, beta):
         
@@ -230,6 +235,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         
         # If max depth is reached
         if curr_depth == self.depth:
+            # Return the Action and Score
             return None, self.evaluationFunction(gameState)
         
         best_score  = None
@@ -272,7 +278,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 if beta < alpha:
                     break
 
-        # If it's a leaf with no successors
+        # If it's a leaf with no successors and score is None
         if best_score is None:
             return None, self.evaluationFunction(gameState)
         else:
