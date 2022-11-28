@@ -212,12 +212,10 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
+        # Get the action and score for pacman (max)
+        action, score = self.alpha_beta(0, 0, gameState, float('-inf'), float('inf'))
         
-        
-
-        inf = float('inf')
-        action, score = self.alpha_beta(0, 0, gameState, -inf, inf)  # Get the action and score for pacman (max)
-        return action  # Return the action to be done as per alpha-beta algorithm
+        return action  
 
     def alpha_beta(self, curr_depth, agent_index, gameState, alpha, beta):
         
