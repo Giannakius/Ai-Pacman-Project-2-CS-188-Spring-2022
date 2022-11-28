@@ -212,7 +212,76 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        
+        
+
+        inf = float('inf')
+        action, score = self.alpha_beta(0, 0, gameState, -inf, inf)  # Get the action and score for pacman (max)
+        return action  # Return the action to be done as per alpha-beta algorithm
+
+    def alpha_beta(self, curr_depth, agent_index, gameState, alpha, beta):
+        
+        #   Max player-Pacman == (agent_index=0)
+        #   Min player-Ghosts == (agent_index!=0)
+        #   If alpha > beta, we can stop generating further successors and prune the search tree.
+
+        # If all agents have played - Restart the proccess
+        if agent_index >= gameState.getNumAgents():
+            agent_index = 0
+            curr_depth = curr_depth + 1
+        
+        # If max depth is reached
+        if curr_depth == self.depth:
+            return None, self.evaluationFunction(gameState)
+        
+        best_score  = None
+        best_action = None
+        
+        if agent_index == 0:  # Pacman's Turn
+            for action in gameState.getLegalActions(agent_index):  # For each legal action of pacman
+            
+                next_game_state = gameState.generateSuccessor(agent_index, action)
+                # find the next's player moves now
+                x , score = self.alpha_beta(curr_depth, agent_index + 1, next_game_state, alpha, beta)
+                
+                # if you find a better score
+                if score > best_score or best_score is None :
+                    best_action = action
+                    best_score = score
+                
+                # MAX cause Pacman's turn 
+                alpha = max(score , alpha)
+                
+                # Prune the tree if alpha is greater than beta
+                if alpha > beta:
+                    break
+
+        else:  # Ghost's Turn 
+            for action in gameState.getLegalActions(agent_index):  # For each legal action of ghost agent
+                
+                next_game_state = gameState.generateSuccessor(agent_index, action)
+                x, score = self.alpha_beta(curr_depth, agent_index + 1, next_game_state, alpha, beta)
+                
+                if score < best_score or best_score is None :
+                    best_action = action
+                    best_score = score
+                
+                # MIN cause Ghost's turn 
+                beta = min(beta, score)
+
+                # Prune the tree if beta is less than alpha
+                if beta < alpha:
+                    break
+
+
+        # If it is a leaf state with no successor states, return the value of evaluationFunction
+        if best_score is None:
+            return None, self.evaluationFunction(gameState)
+        return best_action, best_score  # Return the best_action and best_score
+
+
+
+
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
