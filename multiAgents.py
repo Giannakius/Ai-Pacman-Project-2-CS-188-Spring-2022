@@ -245,9 +245,10 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 x , score = self.alpha_beta(curr_depth, agent_index + 1, next_game_state, alpha, beta)
                 
                 # if you find a better score
-                if score > best_score or best_score is None :
+                if best_score is None or score > best_score:
                     best_action = action
                     best_score = score
+                    
                 
                 # MAX cause Pacman's turn 
                 alpha = max(score , alpha)
@@ -262,7 +263,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 next_game_state = gameState.generateSuccessor(agent_index, action)
                 x, score = self.alpha_beta(curr_depth, agent_index + 1, next_game_state, alpha, beta)
                 
-                if score < best_score or best_score is None :
+                if best_score is None or score < best_score:
                     best_action = action
                     best_score = score
                 
