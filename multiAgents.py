@@ -371,7 +371,44 @@ def betterEvaluationFunction(currentGameState: GameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    pacman_position = currentGameState.getPacmanPosition()
+    ghost_positions = currentGameState.getGhostPositions()
+    game_score = currentGameState.getScore()
+
+    closest_food = 1
+    capsule_count = len(currentGameState.getCapsules())
+
+    food_list = currentGameState.getFood().asList()
+    food_count = len(food_list)
+    
+
+    # Find distances from pacman to all food
+    food_distances = []
+    for food_position in food_list:
+        food_distances.append( manhattanDistance(pacman_position, food_position) )
+
+    # Set value for closest food if there is still food left
+    if food_count > 0:
+        closest_food = min(food_distances)
+
+    # Find distances from pacman to ghost(s)
+    for ghost_position in ghost_positions:
+        ghost_distance = manhattanDistance(pacman_position, ghost_position)
+
+        # If ghost is too close to pacman, prioritize escaping instead of eating the closest food
+        # by resetting the value for closest distance to food
+        if ghost_distance < 2:
+            closest_food = 99999
+
+    features = [1.0 / closest_food, game_score, food_count, capsule_count]
+
+    weights = [10,200,-100,-10]
+
+    # Linear combination of features
+    return sum([feature * weight for feature, weight in zip(features, weights)])
+
+
 
 # Abbreviation
 better = betterEvaluationFunction
