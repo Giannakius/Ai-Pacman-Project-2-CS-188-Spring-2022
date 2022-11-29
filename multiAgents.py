@@ -388,11 +388,11 @@ def betterEvaluationFunction(currentGameState: GameState):
     for food_position in food_list:
         food_distances.append( manhattanDistance(pacman_position, food_position) )
 
-    # Set value for closest food if there is still food left
+    #If there is still food left find the minimum
     if food_count > 0:
         closest_food = min(food_distances)
 
-    # Find distances from pacman to ghost(s)
+    # Find distances from pacman to ghost's
     for ghost_position in ghost_positions:
         ghost_distance = manhattanDistance(pacman_position, ghost_position)
 
@@ -402,11 +402,13 @@ def betterEvaluationFunction(currentGameState: GameState):
             closest_food = 99999
 
     features = [1.0 / closest_food, game_score, food_count, capsule_count]
-    weights = [10,200,-100,-10]
+
+    # I set my own priority ->      game_score > closest_food > capsule_count > food_count
+    weights = [1,2,-2,-1]
 
 
     Features_multi_Weights=[]
-    
+
     for i in range(0, len(features)):
         Features_multi_Weights.append(features[i]* weights[i])
 
