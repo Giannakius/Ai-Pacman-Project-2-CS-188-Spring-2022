@@ -300,7 +300,66 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        action, score = self.ExpectiMax(0, 0, gameState)  # Get the action and score for pacman (agent_index=0)
+        return action  # Return the action to be done as per minimax algorithm
+
+
+
+    def ExpectiMax(self, curr_depth, agent_index, gameState):
+        #   Max player-Pacman == (agent_index=0)
+        #   Min player-Ghosts == (agent_index!=0)
+        #   If alpha > beta, we can stop generating further successors and prune the search tree.
+
+        # If all agents have played - Restart the proccess
+        if agent_index >= gameState.getNumAgents():
+            agent_index = 0
+            curr_depth = curr_depth + 1
+        
+        # If Terminal node
+        if gameState.isWin() or gameState.isLose() or curr_depth == self.depth :
+            # Return the Action and Score
+            return None, self.evaluationFunction(gameState)
+        
+        best_score  = None
+        best_action = None
+        
+        if agent_index == 0:  # Pacman's Turn
+            for action in gameState.getLegalActions(agent_index):  # For each legal action of pacman
+            
+                next_game_state = gameState.generateSuccessor(agent_index, action)
+                # find the next's player moves now
+                x , score = self.ExpectiMax(curr_depth, agent_index + 1, next_game_state)
+                
+                # if you find a better score
+                if best_score is None or score > best_score:
+                    best_action = action
+                    best_score = score
+                    
+
+        else:  # Ghost's Turn 
+            ghostActions = gameState.getLegalActions(agent_index)
+            if len(ghostActions) is not 0:
+                prob = 1.0 / len(ghostActions)
+            
+            for action in gameState.getLegalActions(agent_index):  # For each legal action of ghost agent
+                
+                next_game_state = gameState.generateSuccessor(agent_index, action)
+                x, score = self.ExpectiMax(curr_depth, agent_index + 1, next_game_state)
+                
+                if best_score is None :
+                    best_score = 0.0
+                best_score += prob * score
+                best_action = action
+                
+
+        # If it's a leaf with no successors and score is None
+        if best_score is None:
+            return None, self.evaluationFunction(gameState)
+        else:
+        # Return the best_action and best_score
+            return best_action, best_score  
+
 
 def betterEvaluationFunction(currentGameState: GameState):
     """
