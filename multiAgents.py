@@ -338,18 +338,20 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
                     
 
         else:  # Ghost's Turn 
+
             ghostActions = gameState.getLegalActions(agent_index)
             if len(ghostActions) is not 0:
-                prob = 1.0 / len(ghostActions)
+                prob = 1 / len(ghostActions)
             
-            for action in gameState.getLegalActions(agent_index):  # For each legal action of ghost agent
+            for action in ghostActions:  # For each legal action of ghost agent
                 
                 next_game_state = gameState.generateSuccessor(agent_index, action)
                 x, score = self.ExpectiMax(curr_depth, agent_index + 1, next_game_state)
                 
                 if best_score is None :
-                    best_score = 0.0
-                best_score += prob * score
+                    best_score = 0
+
+                best_score = best_score + prob * score
                 best_action = action
                 
 
