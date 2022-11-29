@@ -402,12 +402,16 @@ def betterEvaluationFunction(currentGameState: GameState):
             closest_food = 99999
 
     features = [1.0 / closest_food, game_score, food_count, capsule_count]
-
     weights = [10,200,-100,-10]
 
-    # Linear combination of features
-    return sum([feature * weight for feature, weight in zip(features, weights)])
 
+    Features_multi_Weights=[]
+    
+    for i in range(0, len(features)):
+        Features_multi_Weights.append(features[i]* weights[i])
+
+    return sum(Features_multi_Weights)
+    
 
 
 # Abbreviation
