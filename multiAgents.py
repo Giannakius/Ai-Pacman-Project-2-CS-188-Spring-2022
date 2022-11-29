@@ -401,11 +401,10 @@ def betterEvaluationFunction(currentGameState: GameState):
         if ghost_distance < 2:
             closest_food = 99999
 
-    features = [1.0 / closest_food, game_score, food_count, capsule_count]
+    features = [closest_food, game_score, food_count, capsule_count]
 
-    # I set my own priority ->      game_score > closest_food > capsule_count > food_count
-    weights = [1,2,-2,-1]
-
+    # I set my own priority ->      game_score > closest_food >= capsule_count > food_count
+    weights = [-1, 2, -2, -1]
 
     Features_multi_Weights=[]
 
