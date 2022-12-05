@@ -398,7 +398,7 @@ def betterEvaluationFunction(currentGameState: GameState):
 
         # If ghost is too close to pacman, prioritize escaping instead of eating the closest food
         # by resetting the value for closest distance to food
-        if ghost_distance < 1:
+        if ghost_distance < 1 :
             closest_food = 99999
 
     features = [closest_food, game_score, food_count, capsule_count]
